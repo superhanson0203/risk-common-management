@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sensitive_word" >
+  
+  <resultMap id="BaseResultMap" type="com.shuai.dao.entity.SensitiveWord" >
+    <result column="id" property="id"/>
+    <result column="word" property="word"/>
+    <result column="lable" property="lable"/>
+    <result column="level" property="level"/>
+    <result column="enable" property="enable"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, word, lable, `level` ,enable, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word
+    where id = #id:INTEGER#
+  </select>
+
+
+  <select id="selectByRecord" resultMap="BaseResultMap" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word
+    where
+      <if test="enable != null">
+        and enable = #enable:TINYINT#
+      </if>
+      <if test="updateTime != null">
+        and update_time > #updateTime:TIMESTAMP#
+      </if>
+
+    /*sensitive_word.selectByRecord*/
+  </select>
+
+
+  <select id="selectSensitiveWordsByWords" resultMap="BaseResultMap" parameterType="java.util.List" >
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word where enable = 1
+    and word in
+    <foreach open="(" close=")" separator="," collection="list" item="item">
+      #list[]#
+    </foreach>
+    /*sensitive_word.selectSensitiveWordsByWords*/
+  </select>
+
+
+  <select id="selectSensitiveWordGroupByRecord" resultMap="BaseResultMap"  parameterType="com.shuai.dao.entity.SensitiveWord">
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word_group
+   where
+      <if test ="enable != null">
+        AND enable = #enable:TINYINT#
+      </if>
+      <if test ="enable != null">
+        AND update_time > #updateTime:TIMESTAMP#
+      </if>
+   
+    /*sensitive_word_group.selectByRecord*/
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    delete from sensitive_word
+    where id = #id:INTEGER#
+  </delete>
+  <insert id="insert" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    insert into sensitive_word (word, lable, enable, create_time,
+    update_time)
+    values (#word:VARCHAR#, #lable:INTEGER#, #enable:TINYINT#, #createTime:TIMESTAMP#,
+    #updateTime:TIMESTAMP#)
+  </insert>
+  <insert id="insertSelective" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    insert into sensitive_word
+    (
+      <if test ="word" >
+        word
+      </if>
+      <if test ="lable" >
+        lable
+      </if>
+      <if test ="enable" >
+        enable
+      </if>
+      <if test ="createTime" >
+        create_time
+      </if>
+      <if test ="updateTime" >
+        update_time
+      </if>
+      )
+   
+    values
+    (
+      <if test ="word" >
+        #word:VARCHAR#
+      </if>
+      <if test ="lable" >
+        #lable:INTEGER#
+      </if>
+      <if test ="enable" >
+        #enable:TINYINT#
+      </if>
+      <if test ="createTime" >
+        #createTime:TIMESTAMP#
+      </if>
+      <if test ="updateTime" >
+        #updateTime:TIMESTAMP#
+      </if>
+      )
+
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    update sensitive_word
+    set
+      <if test ="word" >
+        word = #word:VARCHAR#
+      </if>
+      <if test ="lable" >
+        lable = #lable:INTEGER#
+      </if>
+      <if test ="enable" >
+        enable = #enable:TINYINT#
+      </if>
+      <if test ="createTime" >
+        create_time = #createTime:TIMESTAMP#
+      </if>
+      <if test ="updateTime" >
+        update_time = now()
+      </if>
+   
+    where id = #id:INTEGER#
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    update sensitive_word
+    set word = #word:VARCHAR#,
+      lable = #lable:INTEGER#,
+      enable = #enable:TINYINT#,
+      create_time = #createTime:TIMESTAMP#,
+      update_time = #updateTime:TIMESTAMP#
+    where id = #id:INTEGER#
+  </update>
+
+  <select id="selectByGroupPrimaryKey" resultMap="BaseResultMap" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word_group
+    where id = #id:INTEGER#
+  </select>
+
+  <select id="selectSensitiveWordGroupByWord" resultMap="BaseResultMap"  parameterType="com.shuai.dao.entity.SensitiveWord">
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word_group
+   where
+      <if test ="word != null">
+        word = #word#
+      </if>
+   
+    /*sensitive_word_group.selectSensitiveWordGroupByWord*/
+  </select>
+
+  <select id="selectSensitiveWordByWord" resultMap="BaseResultMap"  parameterType="com.shuai.dao.entity.SensitiveWord">
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word
+   where
+      <if test ="word != null">
+        word = #word#
+      </if>
+   
+    /*sensitive_word_group.selectSensitiveWordGroupByWord*/
+  </select>
+
+  <select id="batchSelectSensitiveWordByWord" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word
+    where word in <foreach collection="list" item="item" separator="," open="(" close=")">#list[].word#</foreach>
+    /*sensitive_word.batchSelectSensitiveWordByWord*/
+  </select>
+
+
+  <select id="batchSelectSensitiveGroupWordByWord" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word_group
+    where word in <foreach collection="list" item="item" separator="," open="(" close=")">#list[].word#</foreach>
+    /*sensitive_word.batchSelectSensitiveGroupWordByWord*/
+  </select>
+
+  <select id="selectSensitiveWordGroupByRecordPage" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word_group where id in (
+    select id from (
+    select id from sensitive_word_group
+   where
+      <if test ="enable != null">
+        AND enable = #enable:TINYINT#
+      </if>
+      <if test ="lable != null">
+        and lable = #lable#
+      </if>
+      <if test ="updateTimeBegin != null">
+        and update_time > #updateTimeBegin:TIMESTAMP#
+      </if>
+      <if test ="updateTimeEnd != null">
+        update_time <![CDATA[<]]> #updateTimeEnd:TIMESTAMP#
+      </if>
+      <if test ="word != null">
+        and word like concat('%', #word:VARCHAR#, '%')
+      </if>
+      order by id ASC
+      <if test ="beginCount != null">
+        and LIMIT #beginCount#,#pageSize#
+      </if>
+      <if test="beginCount == null">
+        LIMIT 10000
+      </if>) t UNION select 0 from dual)
+   
+    /*sensitive_word_group.selectSensitiveWordGroupByRecordPage*/
+  </select>
+
+  <select id="selectSensitiveWordGroupByRecordPageCount" resultType="java.lang.Long"  parameterType="java.util.Map">
+    select count(id) from sensitive_word_group
+   where
+      <if test ="enable != null">
+        AND enable = #enable:TINYINT#
+      </if>
+      <if test ="lable != null">
+        AND lable = #lable#
+      </if>
+      <if test ="updateTimeBegin != null">
+        AND update_time > #updateTimeBegin:TIMESTAMP#
+      </if>
+      <if test ="updateTimeEnd != null">
+        AND update_time <![CDATA[<]]> #updateTimeEnd:TIMESTAMP#
+      </if>
+      <if test ="word != null" >
+        AND word like concat('%', #word:VARCHAR#, '%')
+      </if>
+   
+    /*sensitive_word_group.selectSensitiveWordGroupByRecordPageCount*/
+  </select>
+
+  <select id="selectSensitiveWordByRecordPage" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="sensitive_word.Base_Column_List" />
+    from sensitive_word where id in (
+    select id from (
+    select id from sensitive_word
+   where
+      <if test ="enable != null">
+        and enable = #enable:TINYINT#
+      </if>
+      <if test ="lable != null">
+        and lable = #lable#
+      </if>
+      <if test ="updateTimeBegin != null">
+        and update_time > #updateTimeBegin:TIMESTAMP#
+      </if>
+      <if test ="updateTimeEnd != null">
+        and update_time <![CDATA[<]]> #updateTimeEnd:TIMESTAMP#
+      </if>
+      <if test ="word != null">
+        and word like concat('%', #word:VARCHAR#, '%')
+      </if>
+      order by id ASC
+      <if test ="beginCount != null">
+        LIMIT #beginCount#,#pageSize#
+      </if>
+      <if test="beginCount == null">
+        LIMIT 10000
+      </if>
+      t UNION select 0 from dual)
+   
+    /*sensitive_word_group.selectSensitiveWordByRecordPage*/
+  </select>
+
+  <select id="selectSensitiveWordByRecordPageCount" resultType="java.lang.Long"  parameterType="java.util.Map">
+    select count(id) from sensitive_word
+   where
+      <if test ="enable != null">
+        AND enable = #enable:TINYINT#
+      </if>
+      <if test ="lable != null">
+        AND lable = #lable#
+      </if>
+      <if test ="updateTimeBegin != null">
+        AND update_time > #updateTimeBegin:TIMESTAMP#
+      </if>
+      <if test ="updateTimeEnd != null">
+        AND update_time <![CDATA[<]]> #updateTimeEnd:TIMESTAMP#
+      </if>
+      <if test ="word != null">
+        AND word like concat('%', #word:VARCHAR#, '%')
+      </if>
+   
+    /*sensitive_word_group.selectSensitiveWordByRecordPageCount*/
+  </select>
+
+  <insert id="insertSelectiveGroup" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    insert into sensitive_word_group
+    (
+      <if test ="word != null">
+        word
+      </if>
+      <if test ="lable != null">
+        lable
+      </if>
+      <if test ="enable != null">
+        enable
+      </if>
+      <if test ="createTime != null">
+        create_time
+      </if>
+      <if test ="updateTime != null">
+        update_time
+      </if>
+      )
+   
+    values
+    (
+      <if test ="word != null">
+        #word:VARCHAR#
+      </if>
+      <if test ="lable != null">
+        #lable:INTEGER#
+      </if>
+      <if test ="enable != null">
+        #enable:TINYINT#
+      </if>
+      <if test ="createTime != null">
+        #createTime:TIMESTAMP#
+      </if>
+      <if test ="updateTime != null">
+        #updateTime:TIMESTAMP#
+      </if>
+      )
+  </insert>
+
+  <insert id="batchInsertSelectiveGroup" parameterType="java.util.HashMap">
+    insert into sensitive_word_group (word, lable)
+    values
+    <foreach separator="," collection="list" item="item">
+      (#item[].word:VARCHAR#, #list[].lable:INTEGER#)
+    </foreach>
+  </insert>
+
+  <insert id="batchInsertSelective" parameterType="java.util.HashMap">
+    insert into sensitive_word (word, lable)
+    values
+    <foreach separator="," collection="list" item="item">
+      (#item[].word:VARCHAR#, #list[].lable:INTEGER#)
+    </foreach>
+  </insert>
+
+  <update id="updateByPrimaryKeySelectiveGroup" parameterType="com.shuai.dao.entity.SensitiveWord" >
+    update sensitive_word_group
+    set
+      <if test ="word != null">
+        word = #word:VARCHAR#
+      </if>
+      <if test ="lable != null">
+        lable = #lable:INTEGER#
+      </if>
+      <if test ="enable != null">
+        enable = #enable:TINYINT#
+      </if>
+      <if test ="createTime != null">
+        create_time = #createTime:TIMESTAMP#
+      </if>
+      <if test ="updateTime != null">
+        update_time = now()
+      </if>
+   
+    where id = #id:INTEGER#
+  </update>
+
+</mapper>
